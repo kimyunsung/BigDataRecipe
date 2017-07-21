@@ -10,7 +10,9 @@ import com.sist.stream.IngrRankVO;
 
 @Repository
 public class OracleIngrDAO {
-
+	
+	
+	
 	@Autowired
 	private OracleIngrMapper oracleIngrMapper;
 	

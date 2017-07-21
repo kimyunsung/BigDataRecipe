@@ -26,7 +26,20 @@ public class IngrRankDAO {
 		}
 	}
 	
-	public void musicInsert(IngrRankVO vo) {
+	public IngrRankDAO(String tableName) {
+		try {
+			mc=new MongoClient(new ServerAddress(new InetSocketAddress("211.238.142.123", 27017)));
+			
+			db=mc.getDB("mydb");
+			dbc=db.getCollection(tableName);
+			
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+	}
+	
+	public void foodInsert(IngrRankVO vo) {
 		try {
 			BasicDBObject where=new BasicDBObject();
 			where.put("name", vo.getName());
@@ -56,7 +69,7 @@ public class IngrRankDAO {
 		
 	}
 	
-	public List<IngrRankVO> musicAllData(){
+	public List<IngrRankVO> foodAllData(){
 		List<IngrRankVO> list=new ArrayList<IngrRankVO>();
 		try {
 			DBCursor cursor=dbc.find().sort(new BasicDBObject("count", -1));
@@ -74,6 +87,9 @@ public class IngrRankDAO {
 				
 		return list;
 	}
+	
+	
+	
 	
 }
 

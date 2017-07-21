@@ -65,8 +65,7 @@ public class SparkMain {
 					  new ClassPathXmlApplicationContext("app.xml");
 			
 			OracleIngrDAO oracleIngrDAO=(OracleIngrDAO) app.getBean("oracleIngrDAO");
-			List<IngrRankVO> ingrList=oracleIngrDAO.selectIngr();
-			System.out.println("레시피 갯수는 "+ingrList.size());
+			
 			
 			
 			SparkMain sm = new SparkMain();
@@ -96,7 +95,7 @@ public class SparkMain {
 			
 			//너무 많아서(800개이상) 다 검색을 못하네
 			
-			String[] data={"라면", "햄버거", "만두", "피자", "라면", "족발", "치킨", "아이스크림", "김밥", "탕수육"};
+			String[] data={"라면", "햄버거", "만두", "피자", "수박", "족발", "치킨", "아이스크림", "김밥", "탕수육"};
 			
 			JavaReceiverInputDStream<Status> twitterStream = TwitterUtils.createStream(jsc, data);
 			
@@ -146,7 +145,7 @@ public class SparkMain {
 			});
 			
 			
-			sm.hadoopGetFile(reduce);
+			sm.hadoopGetFile(reduce);//하둡에 파일로 저장 //몽고디비에 입력하는거는 task로 자동으로(위 app로딩 하면서 실행된다.)
 			//status.print();
 			//reduce.print();
 			jsc.start();
@@ -191,9 +190,8 @@ public class SparkMain {
 
 	public void hadoopGetFile(JavaPairDStream<String, Integer> jps) {
 		try {
-
-			// 몽고디비 전송
-			jps.saveAsHadoopFiles("hdfs://NameNode:9000/user/hadoop/food_ns1", "", Text.class, IntWritable.class, TextOutputFormat.class, jobConf );
+			//하둡파일로 저장
+			jps.saveAsHadoopFiles("hdfs://NameNode:9000/user/hadoop_ns1/food_ns1", "", Text.class, IntWritable.class, TextOutputFormat.class, jobConf );
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
